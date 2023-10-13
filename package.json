@@ -21,8 +21,7 @@
     "publish-pkg": "pnpm -r publish --access public",
     "release": "pnpm update-version && pnpm publish-pkg",
     "prepare": "husky install",
-    "rascal": "node dist/index.js",
-    "commit": "pnpm rascal git-commit"
+    "commit": "rascal git-commit"
   },
   "dependencies": {
     "commander": "^9.4.1",
@@ -32,10 +31,11 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
+    "@rascaljs/cli": "^0.0.1",
     "@types/prompts": "^2.4.1",
     "bumpp": "^8.2.1",
     "eslint": "^8.26.0",
-    "eslint-config-rascal": "0.0.10",
+    "eslint-config-soybeanjs": "0.1.1",
     "esno": "^0.16.3",
     "husky": "^8.0.1",
     "tsup": "^6.3.0",
