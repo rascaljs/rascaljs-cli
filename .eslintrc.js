@@ -1,6 +1,11 @@
 module.exports = {
   extends: ['rascal'],
-  settings: {
-    'import/core-modules': ['zx']
-  }
+  overrides: [
+    {
+      files: ['./scripts/*.ts', 'scripts/*.ts'],
+      rules: {
+        'no-unused-expressions': 'off'
+      }
+    }
+  ]
 };
