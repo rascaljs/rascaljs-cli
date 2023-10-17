@@ -1,6 +1,6 @@
 {
   "name": "@rascaljs/cli",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "RascalCoder's command lint tools",
   "author": {
     "name": "RascalCoder",
