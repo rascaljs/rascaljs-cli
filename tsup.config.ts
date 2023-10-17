@@ -5,6 +5,7 @@ export default defineConfig({
   outDir: 'bin',
   splitting: false,
   sourcemap: false,
-  clean: false,
+  clean: true,
+  dts: false,
   format: ['esm', 'cjs']
 });

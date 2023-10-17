@@ -1,6 +1,6 @@
 # rascaljs-cli
 
-Rascal's command lint tools
+一个小瘪三的命令行工具
 
 ## Usage
 

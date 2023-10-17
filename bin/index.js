@@ -271,7 +271,7 @@ var import_kolorist2 = require("kolorist");
 // package.json
 var package_default = {
   name: "@rascaljs/cli",
-  version: "0.2.0",
+  version: "0.2.1",
   description: "RascalCoder's command lint tools",
   author: {
     name: "RascalCoder",
@@ -303,11 +303,12 @@ var package_default = {
     commit: "ras git-commit",
     cleanup: "ras cleanup",
     "update-pkg": "ras update-pkg",
+    "update-version": 'bumpp package.json --execute="pnpm gen-log" --commit --all --push --tag',
     "publish-pkg": "pnpm -r publish --access public",
-    release: "ras release && pnpm publish-pkg"
+    release: "pnpm update-version && pnpm publish-pkg",
+    "gen-log": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   dependencies: {
-    changelogen: "0.5.3",
     commander: "10.0.1",
     enquirer: "2.3.6",
     execa: "7.1.1",
@@ -319,6 +320,8 @@ var package_default = {
   devDependencies: {
     "@rascaljs/cli": "link:",
     "@types/node": "^20.2.3",
+    bumpp: "9.1.0",
+    "conventional-changelog-cli": "^2.2.2",
     eslint: "8.41.0",
     "eslint-config-rascal": "0.1.0",
     "lint-staged": "13.2.2",
@@ -6675,12 +6678,6 @@ function prettierFormat() {
   });
 }
 
-// src/scripts/release.ts
-var import_execa5 = require("execa");
-async function release() {
-  await (0, import_execa5.execa)("npx", ["changelogen", "--release --push --no-github"]);
-}
-
 // src/index.ts
 import_commander.program.command("git-commit").description("\u751F\u6210\u7B26\u5408 Angular \u89C4\u8303\u7684 git commit").action(() => {
   gitCommit();
@@ -6699,9 +6696,6 @@ import_commander.program.command("update-pkg").description("\u5347\u7EA7\u4F9D\u
 });
 import_commander.program.command("prettier-format").description("prettier\u683C\u5F0F\u5316").action(() => {
   prettierFormat();
-});
-import_commander.program.command("release").description("\u7248\u672C\u53D1\u5E03").action(() => {
-  release();
 });
 import_commander.program.version(package_default.version).description((0, import_kolorist2.blue)("soybean alias soy\n\nhttps://github.com/soybeanjs/cli"));
 import_commander.program.parse(process.argv);
