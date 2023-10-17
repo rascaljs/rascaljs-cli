@@ -46,14 +46,13 @@ program
   .action(() => {
     prettierFormat();
   });
-
 // 配置options
 // program
 //   .option('-t, --transform <package name or path>', '插件路径或者npm包名称,支持多个插件，逗号分隔')
 //   .option('-o, --out <path>', '输出文件路径')
 //   .option('-s, --src <path>', '需要转换的源文件路径');
 
-program.version(pkg.version).description(blue('soybean alias soy\n\nhttps://github.com/soybeanjs/cli'));
+program.version(pkg.version).description(blue('rascal alias ras\n\nhttps://github.com/rascaljs/rascaljs-cli/'));
 
 // 接管命令行输入，参数处理
 program.parse(process.argv);

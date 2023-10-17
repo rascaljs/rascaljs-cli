@@ -31,6 +31,7 @@
     "format": "ras prettier-format",
     "commit": "ras git-commit",
     "cleanup": "ras cleanup",
+    "git-hooks": "ras init-git-hooks",
     "update-pkg": "ras update-pkg",
     "update-version": "bumpp package.json",
     "publish-pkg": "pnpm -r publish --access public",
