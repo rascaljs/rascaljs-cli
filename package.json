@@ -32,10 +32,7 @@
     "commit": "ras git-commit",
     "cleanup": "ras cleanup",
     "update-pkg": "ras update-pkg",
-    "update-version": "bumpp package.json --execute=\"pnpm gen-log\" --commit --all --push --tag",
-    "publish-pkg": "pnpm -r publish --access public",
-    "release": "pnpm update-version && pnpm publish-pkg",
-    "gen-log": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "publish-pkg": "pnpm -r publish --access public"
   },
   "dependencies": {
     "commander": "10.0.1",
@@ -49,8 +46,6 @@
   "devDependencies": {
     "@rascaljs/cli": "link:",
     "@types/node": "^20.2.3",
-    "bumpp": "9.1.0",
-    "conventional-changelog-cli": "^2.2.2",
     "eslint": "8.41.0",
     "eslint-config-rascal": "0.1.0",
     "lint-staged": "13.2.2",
