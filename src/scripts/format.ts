@@ -2,7 +2,7 @@ import { execa } from 'execa';
 
 export function prettierFormat() {
   const formatFiles = [
-    '!**/*.{js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue}',
+    '!**/*.{js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue,svelte,astro}',
     '!*.min.*',
     '!CHANGELOG.md',
     '!dist',

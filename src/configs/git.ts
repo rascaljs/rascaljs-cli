@@ -1,4 +1,4 @@
-export const types = [
+export const gitCommitTypes = [
   { value: 'init', title: 'init:     项目初始化 🚀' },
   { value: 'feat', title: 'feat:     添加新特性 ✨' },
   { value: 'fix', title: 'fix:      修复bug 🐛' },
@@ -13,7 +13,7 @@ export const types = [
   { value: 'revert', title: 'revert:   回滚到上一个版本 ↩️' }
 ];
 
-export const scopes = [
+export const gitCommitScopes = [
   ['projects', '项目搭建'],
   ['components', '组件相关'],
   ['hooks', 'hook 相关'],
