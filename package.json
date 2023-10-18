@@ -33,7 +33,7 @@
     "cleanup": "ras cleanup",
     "update-pkg": "ras update-pkg",
     "release": "ras release",
-    "publish-pkg": "pnpm -r publish --access public"
+    "publish-pkg": "pnpm -r publish --access public && pnpm release"
   },
   "dependencies": {
     "changelogen": "0.5.3",
