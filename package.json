@@ -32,11 +32,11 @@
     "commit": "ras git-commit",
     "cleanup": "ras cleanup",
     "update-pkg": "ras update-pkg",
-    "update-version": "bumpp package.json",
-    "publish-pkg": "pnpm -r publish --access public",
-    "release": "pnpm update-version && pnpm publish-pkg"
+    "release": "ras release",
+    "publish-pkg": "pnpm -r publish --access public"
   },
   "dependencies": {
+    "changelogen": "0.5.3",
     "commander": "10.0.1",
     "enquirer": "2.3.6",
     "execa": "7.1.1",

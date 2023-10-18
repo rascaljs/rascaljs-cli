@@ -3,7 +3,7 @@ import { program } from 'commander';
 import { blue } from 'kolorist';
 import pkg from '../package.json';
 import { gitCommit, gitCommitVerify } from './command';
-import { cleanup, initSimpleGitHooks, updatePkg, prettierFormat } from './scripts';
+import { cleanup, initSimpleGitHooks, updatePkg, prettierFormat, release } from './scripts';
 
 program
   .command('git-commit')
@@ -46,7 +46,12 @@ program
   .action(() => {
     prettierFormat();
   });
-
+program
+  .command('release')
+  .description('版本发布')
+  .action(() => {
+    release();
+  });
 // 配置options
 // program
 //   .option('-t, --transform <package name or path>', '插件路径或者npm包名称,支持多个插件，逗号分隔')
