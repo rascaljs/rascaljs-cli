@@ -1,3 +1,15 @@
+## v0.2.7
+
+[compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.6...v0.2.7)
+
+### 🏡 Chore
+
+- **projects:** Update changelogithub config ([e668b5b](https://github.com/rascaljs/rascaljs-cli/commit/e668b5b))
+
+### ❤️ Contributors
+
+- Qi Yuhang <qiyuhang@thinkerx.com>
+
 ## v0.2.6
 
 [compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.5...v0.2.6)
