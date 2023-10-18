@@ -270,7 +270,7 @@ import { blue } from "kolorist";
 // package.json
 var package_default = {
   name: "@rascaljs/cli",
-  version: "0.2.1",
+  version: "0.2.4",
   description: "RascalCoder's command lint tools",
   author: {
     name: "RascalCoder",
@@ -302,12 +302,11 @@ var package_default = {
     commit: "ras git-commit",
     cleanup: "ras cleanup",
     "update-pkg": "ras update-pkg",
-    "update-version": 'bumpp package.json --execute="pnpm gen-log" --commit --all --push --tag',
-    "publish-pkg": "pnpm -r publish --access public",
-    release: "pnpm update-version && pnpm publish-pkg",
-    "gen-log": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    release: "ras release",
+    "publish-pkg": "pnpm -r publish --access public"
   },
   dependencies: {
+    changelogen: "0.5.3",
     commander: "10.0.1",
     enquirer: "2.3.6",
     execa: "7.1.1",
@@ -319,8 +318,7 @@ var package_default = {
   devDependencies: {
     "@rascaljs/cli": "link:",
     "@types/node": "^20.2.3",
-    bumpp: "9.1.0",
-    "conventional-changelog-cli": "^2.2.2",
+    bumpp: "^9.1.0",
     eslint: "8.41.0",
     "eslint-config-rascal": "0.1.0",
     "lint-staged": "13.2.2",
@@ -331,10 +329,10 @@ var package_default = {
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm ras git-commit-verify",
-    "pre-commit": "pnpm exec lint-staged"
+    "pre-commit": "pnpm  lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue}": [
+    "*.{js,json,ts}": [
       "eslint . --fix"
     ]
   }
@@ -6677,6 +6675,12 @@ function prettierFormat() {
   });
 }
 
+// src/scripts/release.ts
+import { execa as execa5 } from "execa";
+async function release() {
+  await execa5("npx", ["changelogen", "--release --push --no-github"]);
+}
+
 // src/index.ts
 program.command("git-commit").description("\u751F\u6210\u7B26\u5408 Angular \u89C4\u8303\u7684 git commit").action(() => {
   gitCommit();
@@ -6695,6 +6699,9 @@ program.command("update-pkg").description("\u5347\u7EA7\u4F9D\u8D56").action(() 
 });
 program.command("prettier-format").description("prettier\u683C\u5F0F\u5316").action(() => {
   prettierFormat();
+});
+program.command("release").description("\u7248\u672C\u53D1\u5E03").action(() => {
+  release();
 });
 program.version(package_default.version).description(blue("soybean alias soy\n\nhttps://github.com/soybeanjs/cli"));
 program.parse(process.argv);
