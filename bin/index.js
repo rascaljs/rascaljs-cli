@@ -304,7 +304,7 @@ var package_default = {
     cleanup: "ras cleanup",
     "update-pkg": "ras update-pkg",
     release: "ras release",
-    "publish-pkg": "pnpm -r publish --access public"
+    "publish-pkg": "pnpm -r publish --access public && pnpm release"
   },
   dependencies: {
     changelogen: "0.5.3",
@@ -6679,7 +6679,7 @@ function prettierFormat() {
 // src/scripts/release.ts
 var import_execa5 = require("execa");
 async function release() {
-  await (0, import_execa5.execa)("npx", ["changelogen", "--release --push --no-github"], { stdio: "inherit" });
+  await (0, import_execa5.execa)("npx", ["changelogen", "--release", "--push", "--no-github"], { stdio: "inherit" });
 }
 
 // src/index.ts

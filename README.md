@@ -25,6 +25,7 @@ pnpm rascal -h
 | git-commit-verify | 校验 git 的提交信息是否符合 Angular 规范 |
 | cleanup           | 清空依赖和构建产物                       |
 | init-git-hooks    | 初始化 simple-gi t-hooks 钩子            |
+| release           | 版本发布，自动变更版本，生成日志 CHANGELOG.md |
 | update-pkg        | 升级依赖                                 |
 | prettier-format   | prettier 格式化                          |
 
