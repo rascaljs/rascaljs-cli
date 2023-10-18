@@ -1,3 +1,25 @@
+## v0.2.6
+
+[compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.5...v0.2.6)
+
+### 🩹 Fixes
+
+- **projects:** Fix release command ([f21a743](https://github.com/rascaljs/rascaljs-cli/commit/f21a743))
+
+### 📖 Documentation
+
+- **projects:** Update README.md ([f30a286](https://github.com/rascaljs/rascaljs-cli/commit/f30a286))
+
+### 🏡 Chore
+
+- **projects:** V0.2.5 ([25a3ee6](https://github.com/rascaljs/rascaljs-cli/commit/25a3ee6))
+- **projects:** Add release command status ([92ec3f8](https://github.com/rascaljs/rascaljs-cli/commit/92ec3f8))
+- **projects:** Update release script ([59ca9ee](https://github.com/rascaljs/rascaljs-cli/commit/59ca9ee))
+
+### ❤️ Contributors
+
+- Qi Yuhang <qiyuhang@thinkerx.com>
+
 ## v0.2.5
 
 [compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.4...v0.2.5)
