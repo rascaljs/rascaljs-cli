@@ -32,7 +32,7 @@ devDependencies:
     specifier: 'link:'
     version: 'link:'
   '@types/node':
-    specifier: ^20.2.3
+    specifier: ^20.2.5
     version: 20.8.6
   bumpp:
     specifier: 9.1.0
