@@ -35,7 +35,7 @@ pnpm rascal -h
 
 默认忽略的格式化文件：
 
-- js,jsx,mjs,cjs,json,ts,tsx,mts,cts,vue
+- js,jsx,mjs,cjs,json,ts,tsx,vue
   > 以上文件通过 eslint 去格式化
 - node_modules
 - _.min._
