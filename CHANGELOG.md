@@ -1,3 +1,16 @@
+## v0.2.8
+
+[compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.7...v0.2.8)
+
+### 🏡 Chore
+
+- **projects:** Add githublogen replace changelogithub ([2ae62bb](https://github.com/rascaljs/rascaljs-cli/commit/2ae62bb))
+- **projects:** Change lint-staged ([9df371a](https://github.com/rascaljs/rascaljs-cli/commit/9df371a))
+
+### ❤️ Contributors
+
+- Qi Yuhang <qiyuhang@thinkerx.com>
+
 ## v0.2.7
 
 [compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.6...v0.2.7)
