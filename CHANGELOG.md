@@ -1,3 +1,15 @@
+# Changelog
+
+## v0.2.8...v0.3.0
+
+[compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.8...v0.3.0)
+
+### 🏡 Chore
+
+- **projects:** Use unbuild replace tsup ([2418a009529b6db0a4f42c871e011f4c11252471](https://github.com/rascaljs/rascaljs-cli/commit/2418a009529b6db0a4f42c871e011f4c11252471))
+- **projects:** Add update-version script ([ae70aa58afc124ff36bee517a9623507786d0a61](https://github.com/rascaljs/rascaljs-cli/commit/ae70aa58afc124ff36bee517a9623507786d0a61))
+- Release v0.3.0 ([11519561c83dd9b3d6e68247be10a9b72366eaf3](https://github.com/rascaljs/rascaljs-cli/commit/11519561c83dd9b3d6e68247be10a9b72366eaf3))
+
 ## v0.2.8
 
 [compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.7...v0.2.8)
