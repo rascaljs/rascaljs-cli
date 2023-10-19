@@ -2,8 +2,15 @@
 import { program } from 'commander';
 import { blue } from 'kolorist';
 import pkg from '../package.json';
-import { gitCommit, gitCommitVerify } from './command';
-import { cleanup, initSimpleGitHooks, updatePkg, prettierFormat, release } from './scripts';
+import {
+  gitCommit,
+  gitCommitVerify,
+  cleanup,
+  initSimpleGitHooks,
+  updatePkg,
+  prettierFormat,
+  lintStaged
+} from './command';
 
 program
   .command('git-commit')
@@ -46,11 +53,12 @@ program
   .action(() => {
     prettierFormat();
   });
+
 program
-  .command('release')
-  .description('版本发布')
+  .command('lint-staged')
+  .description('执行lint-staged')
   .action(() => {
-    release();
+    lintStaged();
   });
 // 配置options
 // program

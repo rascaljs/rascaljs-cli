@@ -15,6 +15,12 @@
   "bugs": {
     "url": "https://github.com/rascaljs/rascaljs-cli/issues"
   },
+  "exports": {
+    "./lint-staged": {
+      "require": "./dist/lint-staged.config.cjs",
+      "import": "./dist/lint-staged.config.mjs"
+    }
+  },
   "bin": {
     "rascal": "dist/index.mjs",
     "ras": "dist/index.mjs"
@@ -42,6 +48,7 @@
     "enquirer": "2.3.6",
     "execa": "7.1.1",
     "kolorist": "1.8.0",
+    "lint-staged": "13.2.2",
     "minimist": "1.2.8",
     "npm-check-updates": "16.10.12",
     "rimraf": "5.0.1"
@@ -60,10 +67,6 @@
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm ras git-commit-verify",
-    "pre-commit": "pnpm  lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,mjs,cjs,jsx,ts,tsx,json,vue}": "eslint . --fix",
-    "*.!{js,mjs,cjs,jsx,ts,tsx,json,vue}": "format"
+    "pre-commit": "pnpm typecheck && pnpm ras lint-staged"
   }
 }
