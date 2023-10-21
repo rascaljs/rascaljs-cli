@@ -40,7 +40,7 @@
     "update-pkg": "ras update-pkg",
     "publish-pkg": "pnpm -r publish --access public",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm release && pnpm build && pnpm publish-pkg"
+    "release": "ras release && pnpm build && pnpm publish-pkg"
   },
   "dependencies": {
     "bumpp": "9.1.0",
