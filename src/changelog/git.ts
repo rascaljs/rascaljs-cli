@@ -1,11 +1,60 @@
 import { ofetch } from 'ofetch';
+import dayjs from 'dayjs';
 import { execCommand, notNullish } from '../shared';
-import type { RawGitCommit, GitCommit, GitCommitAuthor, Reference, AuthorInfo } from '../types';
+import { VERSION_REG } from './constant';
+import type { RawGitCommit, GitCommit, GitCommitAuthor, GithubConfig, Reference, AuthorInfo } from '../types';
 
-export async function getLastGitTag(delta = 0) {
+export async function getTotalGitTags() {
   const tagStr = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']);
 
   const tags = tagStr.split('\n');
+
+  return tags;
+}
+
+export async function getTagDateMap() {
+  const tagDateStr = await execCommand('git', [
+    '--no-pager',
+    'log',
+    '--tags',
+    '--simplify-by-decoration',
+    '--pretty=format:%ci %d'
+  ]);
+
+  const TAG_MARK = 'tag: ';
+
+  const map = new Map<string, string>();
+
+  const dates = tagDateStr.split('\n').filter(item => item.includes(TAG_MARK));
+
+  dates.forEach(item => {
+    const [dateStr, tagStr] = item.split(TAG_MARK);
+
+    const date = dayjs(dateStr).format('YYYY-MM-DD');
+
+    const tag = tagStr.match(VERSION_REG)?.[0];
+    if (tag && date) {
+      map.set(tag.trim(), date);
+    }
+  });
+
+  return map;
+}
+
+export function getFromToTags(tags: string[]) {
+  const result: { from: string; to: string }[] = [];
+
+  tags.forEach((tag, index) => {
+    if (index < tags.length - 1) {
+      result.push({ from: tag, to: tags[index + 1] });
+    }
+  });
+
+  return result;
+}
+
+export async function getLastGitTag(delta = 0) {
+  const tags = await getTotalGitTags();
 
   return tags[tags.length + delta - 1];
 }
@@ -148,53 +197,61 @@ function getHeaders(githubToken: string) {
   };
 }
 
-async function getResolvedAuthorLogin(params: {
-  github: string;
-  githubToken: string;
-  commitHashes: string[];
-  email: string;
-}) {
-  const { github, githubToken, commitHashes, email } = params;
-
+async function getResolvedAuthorLogin(github: GithubConfig, commitHashes: string[], email: string) {
   let login = '';
 
-  // token not provided, skip github resolving
-  if (!githubToken) {
-    return login;
-  }
-
   try {
-    const data = await ofetch(`https://api.github.com/search/users?q=${encodeURIComponent(email)}`, {
-      headers: getHeaders(githubToken)
-    });
-    login = data.items[0].login;
+    const data = await ofetch(`https://ungh.cc/users/find/${email}`);
+    login = data?.user?.username || '';
   } catch {}
 
   if (login) {
     return login;
   }
 
+  const { repo, token } = github;
+
+  // token not provided, skip github resolving
+  if (!token) {
+    return login;
+  }
+
   if (commitHashes.length) {
     try {
-      const data = await ofetch(`https://api.github.com/repos/${github}/commits/${commitHashes[0]}`, {
-        headers: getHeaders(githubToken)
+      const data = await ofetch(`https://api.github.com/repos/${repo}/commits/${commitHashes[0]}`, {
+        headers: getHeaders(token)
       });
       login = data?.author?.login || '';
     } catch (e) {}
   }
 
+  if (login) {
+    return login;
+  }
+
+  try {
+    const data = await ofetch(`https://api.github.com/search/users?q=${encodeURIComponent(email)}`, {
+      headers: getHeaders(token)
+    });
+    login = data.items[0].login;
+  } catch (e) {}
+
   return login;
 }
 
-export async function getGitCommitsAndResolvedAuthors(commits: GitCommit[], github: string, githubToken: string) {
+export async function getGitCommitsAndResolvedAuthors(
+  commits: GitCommit[],
+  github: GithubConfig,
+  resolvedLogins?: Map<string, string>
+) {
   const resultCommits: GitCommit[] = [];
 
   const map = new Map<string, AuthorInfo>();
 
-  for (const commit of commits) {
+  for await (const commit of commits) {
     const resolvedAuthors: AuthorInfo[] = [];
 
-    for (const [index, author] of Object.entries(commit.authors)) {
+    for await (const [index, author] of Object.entries(commit.authors)) {
       const { email, name } = author;
 
       if (email && name) {
@@ -211,17 +268,21 @@ export async function getGitCommitsAndResolvedAuthors(commits: GitCommit[], gith
           login: ''
         };
 
-        if (!map.has(email)) {
-          // eslint-disable-next-line no-await-in-loop
-          resolvedAuthor.login = await getResolvedAuthorLogin({ github, githubToken, commitHashes, email });
+        if (!resolvedLogins?.has(email)) {
+          const login = await getResolvedAuthorLogin(github, commitHashes, email);
+          resolvedAuthor.login = login;
 
-          map.set(author.email, resolvedAuthor);
+          resolvedLogins?.set(email, login);
         } else {
-          const resolvedItem = map.get(author.email)!;
-          Object.assign(resolvedAuthor, resolvedItem);
+          const login = resolvedLogins?.get(email) || '';
+          resolvedAuthor.login = login;
         }
 
         resolvedAuthors.push(resolvedAuthor);
+
+        if (!map.has(email)) {
+          map.set(email, resolvedAuthor);
+        }
       }
     }
 

@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'fs/promises';
 import dayjs from 'dayjs';
 import { convert } from 'convert-gitmoji';
 import { partition, groupBy, capitalize, join } from '../shared';
+import { VERSION_REG, VERSION_REG_OF_MARKDOWN } from './constant';
 import type { Reference, GitCommit, ChangelogOption, AuthorInfo } from '../types';
 
 function formatReferences(references: Reference[], github: string, type: 'issues' | 'hash'): string {
@@ -25,8 +26,8 @@ function formatReferences(references: Reference[], github: string, type: 'issues
 }
 
 function formatLine(commit: GitCommit, options: ChangelogOption) {
-  const prRefs = formatReferences(commit.references, options.github, 'issues');
-  const hashRefs = formatReferences(commit.references, options.github, 'hash');
+  const prRefs = formatReferences(commit.references, options.github.repo, 'issues');
+  const hashRefs = formatReferences(commit.references, options.github.repo, 'hash');
 
   let authors = join([...new Set(commit.resolvedAuthors.map(i => (i.login ? `@${i.login}` : `**${i.name}**`)))]).trim();
 
@@ -88,20 +89,43 @@ function formatSection(commits: GitCommit[], sectionName: string, options: Chang
   return lines;
 }
 
-export function getGitUserAvatar(userName: string) {
-  const avatarUrl = `https://github.com/${userName}.png?size=48`;
+function getUserGithub(userName: string) {
+  const githubUrl = `https://github.com/${userName}`;
+
+  return githubUrl;
+}
+
+function getGitUserAvatar(userName: string) {
+  const githubUrl = getUserGithub(userName);
+
+  const avatarUrl = `${githubUrl}.png?size=48`;
 
   return avatarUrl;
 }
 
-function createUserAvatar(userName: string) {
-  const el = `<a href="https://github.com/${userName}" data-hovercard-type="user" data-hovercard-url="/users/yanbowe/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
-  <img src="${getGitUserAvatar(
-    userName
-  )}" alt="@${userName}" size="32" height="32" width="32" data-view-component="true" class="avatar circle">
-</a>`;
+function createContributorLine(contributors: AuthorInfo[]) {
+  let loginLine = '';
+  let unloginLine = '';
 
-  return el;
+  contributors.forEach((contributor, index) => {
+    const { name, email, login } = contributor;
+
+    if (!login) {
+      let line = `[${name}](mailto:${email})`;
+
+      if (index < contributors.length - 1) {
+        line += ',&nbsp;';
+      }
+
+      unloginLine += line;
+    } else {
+      const githubUrl = getUserGithub(login);
+      const avatar = getGitUserAvatar(login);
+      loginLine += `[![${login}](${avatar})](${githubUrl})&nbsp;&nbsp;`;
+    }
+  });
+
+  return `${loginLine}\n${unloginLine}`;
 }
 
 export function generateMarkdown(params: {
@@ -114,12 +138,20 @@ export function generateMarkdown(params: {
 
   const lines: string[] = [];
 
-  const url = `https://github.com/${options.github}/compare/${options.from}...${options.to}`;
+  const url = `https://github.com/${options.github.repo}/compare/${options.from}...${options.to}`;
 
   if (showTitle) {
-    const today = dayjs().format('YYYY-MM-DD');
+    const isNewVersion = !VERSION_REG.test(options.to);
 
-    const title = `## [${options.to}](${url})(${today}})`;
+    const version = isNewVersion ? options.newVersion : options.to;
+
+    const date = isNewVersion ? dayjs().format('YY-MM-DD') : options.tagDateMap.get(options.to);
+
+    let title = `## [${version}](${url})`;
+
+    if (date) {
+      title += ` (${date})`;
+    }
 
     lines.push(title);
   }
@@ -144,26 +176,42 @@ export function generateMarkdown(params: {
   }
 
   if (showTitle) {
-    lines.push('', '### ❤️ Contributors', '');
+    lines.push('', '### &nbsp;&nbsp;&nbsp;❤️ Contributors', '');
 
-    const contributorLine = contributors.map(item => createUserAvatar(item.login)).join(' ');
+    const contributorLine = createContributorLine(contributors);
 
     lines.push(contributorLine);
   }
 
   const md = convert(lines.join('\n').trim(), true);
 
-  const markdown = md.replace(/&nbsp;/g, '');
-
-  return markdown;
+  return md;
 }
 
-export async function writeMarkdown(md: string, mdPath: string) {
+export async function isVersionInMarkdown(version: string, mdPath: string) {
+  let isIn = false;
+
+  const md = await readFile(mdPath, 'utf8');
+
+  if (md) {
+    const matches = md.match(VERSION_REG_OF_MARKDOWN);
+
+    if (matches?.length) {
+      const versionInMarkdown = `## [${version}]`;
+
+      isIn = matches.includes(versionInMarkdown);
+    }
+  }
+
+  return isIn;
+}
+
+export async function writeMarkdown(md: string, mdPath: string, override = false) {
   let changelogMD: string;
 
   const changelogPrefix = '# Changelog';
 
-  if (existsSync(mdPath)) {
+  if (!override && existsSync(mdPath)) {
     changelogMD = await readFile(mdPath, 'utf8');
     if (!changelogMD.startsWith(changelogPrefix)) {
       changelogMD = `${changelogPrefix}\n\n${changelogMD}`;

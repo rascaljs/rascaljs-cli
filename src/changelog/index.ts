@@ -1,6 +1,10 @@
+import cliProgress from 'cli-progress';
 import { readFile } from 'fs/promises';
 import {
+  getTotalGitTags,
+  getTagDateMap,
   getLastGitTag,
+  getFromToTags,
   getCurrentGitBranch,
   getGitHubRepo,
   isPrerelease,
@@ -8,7 +12,7 @@ import {
   getGitCommits,
   getGitCommitsAndResolvedAuthors
 } from './git';
-import { generateMarkdown, writeMarkdown } from './markdown';
+import { isVersionInMarkdown, generateMarkdown, writeMarkdown } from './markdown';
 import type { ChangelogOption } from '../types';
 
 function createDefaultOptions() {
@@ -31,65 +35,126 @@ function createDefaultOptions() {
       ci: { title: '🤖 CI' }
     },
     scopeMap: {},
-    github: '',
-    githubToken: process.env.GITHUB_TOKEN || '',
+    github: {
+      repo: '',
+      token: process.env.GITHUB_TOKEN || ''
+    },
     from: '',
     to: '',
+    tags: [],
+    tagDateMap: new Map(),
     prerelease: false,
     capitalize: true,
     emoji: true,
     titles: {
       breakingChanges: '🚨 Breaking Changes'
     },
-    output: 'CHANGELOG1.md'
+    output: 'CHANGELOG.md',
+    overrideChangelog: false,
+    newVersion: ''
   };
 
   return options;
 }
 
-async function getGithubTokenFromPkg(cwd: string) {
+async function getOptionsFromPkg(cwd: string) {
   let githubToken = '';
+  let newVersion = '';
 
   try {
     const pkgJson = await readFile(`${cwd}/package.json`, 'utf-8');
     const pkg = JSON.parse(pkgJson);
     githubToken = pkg?.['github-token'] || '';
+    newVersion = pkg?.version || '';
   } catch {}
 
-  return githubToken;
+  return {
+    githubToken,
+    newVersion
+  };
 }
 
 export async function initOptions() {
   const options = createDefaultOptions();
 
-  const githubToken = await getGithubTokenFromPkg(options.cwd);
-  options.githubToken = options.githubToken || githubToken;
-  options.from = await getLastGitTag();
-  options.to = await getCurrentGitBranch();
-  options.github = await getGitHubRepo();
-  options.prerelease = isPrerelease(options.to);
+  const { githubToken, newVersion } = await getOptionsFromPkg(options.cwd);
+
+  options.github.token ||= githubToken;
+  options.github.repo = await getGitHubRepo();
+
+  options.newVersion ||= `v${newVersion}`;
+  options.from ||= await getLastGitTag();
+  options.to ||= await getCurrentGitBranch();
 
   if (options.to === options.from) {
     const lastTag = await getLastGitTag(-1);
     const firstCommit = await getFirstGitCommit();
-
     options.from = lastTag || firstCommit;
   }
 
+  options.tags = await getTotalGitTags();
+
+  options.tagDateMap = await getTagDateMap();
+
+  options.prerelease = isPrerelease(options.to);
+
   return options;
+}
+
+async function generateChangelogByTag(options: ChangelogOption) {
+  const gitCommits = await getGitCommits(options.from, options.to, options.scopeMap);
+  const { commits, contributors } = await getGitCommitsAndResolvedAuthors(gitCommits, options.github);
+  const md = generateMarkdown({ commits, options, showTitle: true, contributors });
+  return md;
+}
+
+async function generateChangelogByTags(options: ChangelogOption) {
+  const tags = getFromToTags(options.tags);
+
+  const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar.start(tags.length, 0);
+
+  let md = '';
+
+  const resolvedLogins = new Map<string, string>();
+
+  for await (const [index, tag] of tags.entries()) {
+    const { from, to } = tag;
+    const gitCommits = await getGitCommits(from, to, options.scopeMap);
+    const { commits, contributors } = await getGitCommitsAndResolvedAuthors(gitCommits, options.github, resolvedLogins);
+    const opts = { ...options, from, to };
+    const nextMd = generateMarkdown({ commits, options: opts, showTitle: true, contributors });
+
+    md = `${nextMd}\n\n${md}`;
+
+    bar.update(index + 1);
+  }
+
+  bar.stop();
+
+  return md;
 }
 
 /**
  * 根据git commit message生成CHANGELOG.md
  */
-export async function generateChangelog() {
+export async function generateChangelog(total = false) {
   const options = await initOptions();
-  const gitCommits = await getGitCommits(options.from, options.to, options.scopeMap);
-  const { commits, contributors } = await getGitCommitsAndResolvedAuthors(
-    gitCommits,
-    options.github,
-    options.githubToken
-  );
-  const md = generateMarkdown({ commits, options, showTitle: true, contributors });
-  writeMarkdown(md, options.output);
+
+  let md = '';
+
+  if (total) {
+    md = await generateChangelogByTags(options);
+    await writeMarkdown(md, options.output, true);
+    return;
+  }
+
+  const isIn = await isVersionInMarkdown(options.to, options.output);
+
+  if (!options.overrideChangelog && isIn) {
+    return;
+  }
+
+  md = await generateChangelogByTag(options);
+  await writeMarkdown(md, options.output, false);
 }

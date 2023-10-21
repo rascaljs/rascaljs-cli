@@ -22,8 +22,8 @@
     }
   },
   "bin": {
-    "rascal": "dist/index.mjs",
-    "ras": "dist/index.mjs"
+    "rascal": "dist/index.cjs",
+    "ras": "dist/index.cjs"
   },
   "files": [
     "dist"
@@ -38,14 +38,14 @@
     "commit": "ras git-commit",
     "cleanup": "ras cleanup",
     "update-pkg": "ras update-pkg",
-    "update-version": "bumpp --commit --push --tag",
     "publish-pkg": "pnpm -r publish --access public",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm update-version && pnpm build && pnpm publish-pkg"
+    "release": "pnpm release && pnpm build && pnpm publish-pkg"
   },
   "dependencies": {
-    "bumpp": "^9.1.0",
+    "bumpp": "9.1.0",
     "cac": "6.7.14",
+    "cli-progress": "^3.12.0",
     "convert-gitmoji": "^0.1.3",
     "dayjs": "^1.11.8",
     "enquirer": "2.3.6",
@@ -59,18 +59,19 @@
   },
   "devDependencies": {
     "@rascaljs/cli": "link:",
+    "@types/cli-progress": "^3.11.0",
     "@types/node": "^20.2.5",
-    "bumpp": "9.1.0",
     "eslint": "8.41.0",
     "eslint-config-rascal": "0.1.0",
     "lint-staged": "13.2.2",
     "simple-git-hooks": "2.8.1",
     "tsx": "3.12.7",
-    "typescript": "5.0.4",
+    "typescript": "5.1.6",
     "unbuild": "1.2.1"
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm ras git-commit-verify",
     "pre-commit": "pnpm typecheck && pnpm ras lint-staged"
-  }
+  },
+  "github-token": "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"
 }

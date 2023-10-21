@@ -9,12 +9,14 @@ import {
   updatePkg,
   prettierFormat,
   eslintPretter,
-  lintStaged
+  lintStaged,
+  genChangelog,
+  release
 } from './command';
 
-const cli = cac('soybean');
+const cli = cac('ras');
 
-cli.version(version).help();
+cli.version(version).option('--total', 'Generate changelog by total tags').help();
 
 type Command =
   | 'git-commit'
@@ -24,11 +26,19 @@ type Command =
   | 'update-pkg'
   | 'prettier-format'
   | 'eslint-prettier'
-  | 'lint-staged';
+  | 'lint-staged'
+  | 'changelog'
+  | 'release';
 
-type CommandWithAction = Record<Command, { desc: string; action: () => Promise<void> | void }>;
+type CommandAction<A extends object> = (args?: A) => Promise<void> | void;
 
-const commands: CommandWithAction = {
+type CommandWithAction<A extends object = object> = Record<Command, { desc: string; action: CommandAction<A> }>;
+
+interface CommandArg {
+  total?: boolean;
+}
+
+const commands: CommandWithAction<CommandArg> = {
   'git-commit': {
     desc: '生成符合 Angular 规范的 git commit',
     action: gitCommit
@@ -60,6 +70,16 @@ const commands: CommandWithAction = {
   'lint-staged': {
     desc: '执行lint-staged',
     action: lintStaged
+  },
+  changelog: {
+    desc: '生成changelog',
+    action: async args => {
+      await genChangelog(args?.total);
+    }
+  },
+  release: {
+    desc: '发布：更新版本号、生成changelog、提交代码',
+    action: release
   }
 };
 
