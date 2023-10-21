@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.4.0](https://github.com/rascaljs/rascaljs-cli/compare/v0.3.3...master) (23-10-21)
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **projects**: Add changelog command &nbsp;-&nbsp; by **qi yuhang** [<samp>(09a94)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/09a94c7)
+- **projects**: Release command,changelog command &nbsp;-&nbsp; by **qi yuhang** [<samp>(39c28)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/39c28dd)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- **projects**: Fix release script &nbsp;-&nbsp; by **qi yuhang** [<samp>(4d3dd)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/4d3dd14)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+
+[qi yuhang](mailto:qiyuhang@thinkerx.com)
+
 ## v0.2.8...v0.3.0
 
 [compare changes](https://github.com/rascaljs/rascaljs-cli/compare/v0.2.8...v0.3.0)
