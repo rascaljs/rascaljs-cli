@@ -51,11 +51,14 @@
     "enquirer": "2.3.6",
     "execa": "7.1.1",
     "kolorist": "1.8.0",
-    "lint-staged": "13.2.2",
     "minimist": "1.2.8",
-    "npm-check-updates": "16.10.12",
     "ofetch": "1.0.1",
     "rimraf": "5.0.1"
+  },
+  "peerDependencies": {
+    "lint-staged": "13.2.2",
+    "npm-check-updates": "16.10.12",
+    "simple-git-hooks": "2.8.1"
   },
   "devDependencies": {
     "@rascaljs/cli": "link:",
