@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.5.0](https://github.com/rascaljs/rascaljs-cli/compare/v0.4.0...master) (23-10-25)
+
+### &nbsp;&nbsp;&nbsp;🏡 Chore
+
+- **projects**: Peer lint-staged,npm-check-updates,simple-git-hooks &nbsp;-&nbsp; by **qi yuhang** [<samp>(5ef1a)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/5ef1a26)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+
+[qi yuhang](mailto:qiyuhang@thinkerx.com)
+
 ## [v0.4.0](https://github.com/rascaljs/rascaljs-cli/compare/v0.3.3...master) (23-10-21)
 
 ### &nbsp;&nbsp;&nbsp;🚀 Features
