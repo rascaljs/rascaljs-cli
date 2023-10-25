@@ -16,11 +16,15 @@
     "url": "https://github.com/rascaljs/rascaljs-cli/issues"
   },
   "exports": {
-    "./lint-staged": {
-      "require": "./dist/lint-staged.config.cjs",
-      "import": "./dist/lint-staged.config.mjs"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
     }
   },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "bin": {
     "rascal": "dist/index.cjs",
     "ras": "dist/index.cjs"
@@ -55,18 +59,13 @@
     "ofetch": "1.0.1",
     "rimraf": "5.0.1"
   },
-  "peerDependencies": {
-    "lint-staged": "13.2.2",
-    "npm-check-updates": "16.10.12",
-    "simple-git-hooks": "2.8.1"
-  },
   "devDependencies": {
     "@rascaljs/cli": "link:",
     "@types/cli-progress": "^3.11.0",
     "@types/node": "^20.2.5",
     "eslint": "8.41.0",
-    "eslint-config-rascal": "0.1.0",
     "lint-staged": "13.2.2",
+    "npm-check-updates": "16.10.12",
     "simple-git-hooks": "2.8.1",
     "tsx": "3.12.7",
     "typescript": "5.1.6",
