@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.5.1](https://github.com/rascaljs/rascaljs-cli/compare/v0.5.0...master) (23-10-25)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- **projects**: Remove types &nbsp;-&nbsp; by **一个小瘪三** [<samp>(19615)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/1961595)
+
+### &nbsp;&nbsp;&nbsp;🏡 Chore
+
+- **projects**: Change package exports &nbsp;-&nbsp; by **一个小瘪三** [<samp>(d8367)</samp>](https://github.com/rascaljs/rascaljs-cli/commit/d83672b)
+
+### &nbsp;&nbsp;&nbsp;❤️ Contributors
+
+
+[一个小瘪三](mailto:10948399+menon-qiqi@user.noreply.gitee.com)
+
 ## [v0.5.0](https://github.com/rascaljs/rascaljs-cli/compare/v0.4.0...master) (23-10-25)
 
 ### &nbsp;&nbsp;&nbsp;🏡 Chore
