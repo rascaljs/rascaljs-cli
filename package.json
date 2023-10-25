@@ -17,14 +17,12 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "bin": {
     "rascal": "dist/index.cjs",
     "ras": "dist/index.cjs"
